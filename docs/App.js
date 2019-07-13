@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Saturday 2019-07-13 18:18:09 pm
+ * Last Modified: Saturday 2019-07-13 20:46:33 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -13,17 +13,16 @@ import React, { Component } from "react";
 import trackEvents from "./tracks";
 import { connect } from 'react-redux'
 import { fetchUserInfo } from "./store/actions";
-import { track } from "../";
+import { track, inject } from "../";
 
 import './App.css';
-
+@inject({ trackEvents })
 class App extends Component {
   constructor(props) {
     super(props);
     this.buttonRef = null;
-    this.trackEvents = trackEvents;
     this.state = {
-      date: Date.now(),
+      date: null,
       target: null,
       content: null
     };

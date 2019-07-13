@@ -2,14 +2,13 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Saturday 2019-07-13 18:06:30 pm
+ * Last Modified: Saturday 2019-07-13 20:49:32 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
  * ------
  * Javascript will save your soul!
  */
-import { reaction } from "mobx";
 import { isVisible } from "./utils/dom";
 import { zipObject, vaildEvent, vaildWatchKey } from "./utils/helper";
 
@@ -21,6 +20,26 @@ const modifiers = {
   ASYNC_DELAY: "async.delay",
 };
 
+/**
+ * @desc inject 装饰器
+ * @param {Function} reaction 如果为 Mobx Class 则需要注入 mobx.reaction 来监听通过异步action 对 state 的改变
+ * @param {Object} trackEvents 当前页面需要的埋点事件
+ */
+export const inject = (...props) => (target) => {
+  Object.assign(target.prototype, ...props);
+}
+
+/**
+ * @desc track 埋点装饰器
+ * @param {String} modifier 修饰符，对应的埋点类型
+ * @param {Number | String} eventId 埋点事件id
+ * @param {Object} params 自定义参数，目前支持tateKey、propKey、delay、ref
+ * 
+ * @property[stateKey] 对应组件 state 或者 mobx observable 中 key
+ * @property[propKey] 对应组件 props 中 key
+ * @property[delay] 埋点延迟时间
+ * @property[ref] 对应 DOM 的引用，避免小于埋点延迟时间内发生DOM影藏造成埋点继续上报的问题
+ */
 export function track(modifier, eventId, params = {}) {
   const [mdfs] = zipObject(modifiers);
 
@@ -28,24 +47,14 @@ export function track(modifier, eventId, params = {}) {
     throw new Error(`modifier '${modifier}' does not exist`);
   }
 
-  return (target, name, descriptor) => {
+  return (_, name, descriptor) => {
     let handler;
     const { value, initializer } = descriptor;
-
-    // 如果在React组件中使用
-    if (target.isReactComponent){
-
-    }
-  
-    // 如果在Mobx中使用
-    if (target.isReactComponent){
-
-    }
 
     // 事件行为埋点
     if (modifier.includes(modifiers.CLICK)) {
       handler = function(...args) {
-        let context;
+        let context = this;
         const isRC = this.isReactComponent; // 是否为 react 组件
         const once = modifier.includes(ONCE);
         const onceProp = `${name}_${eventId}`;
@@ -53,11 +62,7 @@ export function track(modifier, eventId, params = {}) {
         const tck = () => {
           if (this[onceProp]) return; // 如果存在once修饰符，且为true则直接返回
           vaildEvent(this.trackEvents, eventId); // 检测eventId是否合法
-          if (isRC) {
-            context = { ...this.state, ...this.props };
-          } else {
-            context = this;
-          }
+          isRC && (context = { ...this.state, ...this.props });
           this.trackEvents[eventId].call(null, context, ...args);
           once && (this[onceProp] = true);
         };
@@ -71,7 +76,7 @@ export function track(modifier, eventId, params = {}) {
     else {
       handler = function(...args) {
         let tck;
-        let context;
+        let context = this;
         const isRC = this.isReactComponent; // 是否为 react 组件
         const once = modifier.includes(ONCE);
         const fn = value ? value.bind(this) : initializer.apply(this, args);
@@ -91,25 +96,15 @@ export function track(modifier, eventId, params = {}) {
             const { delay = 0, ref } = params;
             const ele = this[ref] || document;
 
-            if (isRC) {
-              context = { ...this.state, ...this.props };
-            } else {
-              context = this;
-            }
-
             this.$timer = setTimeout(() => {
+              isRC && (context = { ...this.state, ...this.props });
               isVisible(ele) && this.trackEvents[eventId].call(null, context, ...args);
               clearTimeout(this.$timer);
             }, delay);
           };
         } else if (modifier === modifiers.ASYNC || modifier === modifiers.ASYNC + ".once") {
           tck = () => {
-            if (isRC) {
-              context = { ...this.state, ...this.props };
-            } else {
-              context = this;
-            }
-            // console.log('当前的修饰符', modifier, once, propKey, stateKey)
+            isRC && (context = { ...this.state, ...this.props });
             if (propKey && this[`${watchPropKey}_${ONCE}`]) return;
             if (stateKey && this[`${watchStateKey}_${ONCE}`]) return;
             this.trackEvents[eventId].call(null, context, ...args);
@@ -120,8 +115,6 @@ export function track(modifier, eventId, params = {}) {
 
         propKey && (this.tckQueue[watchPropKey] = [tck]) && this.tckQueuePropKeys.push(watchPropKey);
         stateKey && (this.tckQueue[watchStateKey] = [tck]) && this.tckQueueStateKeys.push(watchStateKey);
-        // console.log('namename', name)
-        // console.log(this.tckQueue, tck);
 
         if (isRC && !this.getSnapshotBeforeUpdate) {
           this.getSnapshotBeforeUpdate = (prevProps, prevState) => {
@@ -145,11 +138,13 @@ export function track(modifier, eventId, params = {}) {
             return null;
           }
         } else {
-          const cbks = this.tckQueue[watchStateKey];
-          const disposer = reaction(() => this[stateKey], () => {
-            cbks.forEach(sub => sub && sub());
-            disposer();
-          });
+          if (this.reaction) {
+            const cbks = this.tckQueue[watchStateKey];
+            const disposer = this.reaction(() => this[stateKey], () => {
+              cbks.forEach(sub => sub && sub());
+              disposer();
+            });
+          }
         }
         return fn(...args);
       }

@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "watch": "cross-env NODE_ENV=development rollup --config build/rollup.config.es.js --watch",
-    "build": "NODE_ENV=production npm run build:es && npm run build:browser",
-    "build:browser": "rollup --config build/rollup.config.browser.js && npm run size",
-    "build:es": "rollup --config build/rollup.config.es.js",
+    "build": "yarn build:es && yarn build:browser",
+    "build:browser": "NODE_ENV=production rollup --config build/rollup.config.browser.js && yarn size",
+    "build:es": "NODE_ENV=production rollup --config build/rollup.config.es.js",
     "start": "node scripts/start.js",
     "build:docs": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "size": "gzip-size dist/r-track.min.js"
   },
   "main": "dist/r-track.min.js",
   "module": "dist/r-track.esm.js",
@@ -41,6 +42,7 @@
     "eslint-plugin-react-hooks": "^1.5.0",
     "file-loader": "3.0.1",
     "fs-extra": "7.0.1",
+    "gzip-size-cli": "^3.0.0",
     "html-webpack-plugin": "4.0.0-beta.5",
     "identity-obj-proxy": "3.0.0",
     "is-wsl": "^1.1.0",

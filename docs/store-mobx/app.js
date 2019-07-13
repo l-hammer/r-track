@@ -2,24 +2,24 @@
  * Created Date: 2019-07-13
  * Author: 宋慧武
  * ------
- * Last Modified: Saturday 2019-07-13 18:16:25 pm
+ * Last Modified: Saturday 2019-07-13 20:45:47 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
  * ------
  * Javascript will save your soul!
  */
-import { observable, action, runInAction } from "mobx";
+import { observable, action, runInAction, reaction } from "mobx";
 import trackEvents from "../tracks";
-import { track } from "../../";
+import { track, inject } from "../../";
 
+@inject({
+  reaction,
+  trackEvents
+})
 class App {
-  constructor() {
-    this.trackEvents = trackEvents;
-  }
-
   @observable userInfo = {};
-  @observable date = Date.now();
+  @observable date = null;
   @observable target = null;
   @observable content = null;
 
