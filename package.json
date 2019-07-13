@@ -10,7 +10,9 @@
     "start": "node scripts/start.js",
     "build:docs": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "size": "gzip-size dist/r-track.min.js"
+    "size": "gzip-size dist/r-track.min.js",
+    "lint": "prettier --check src/**/*.js",
+    "prepublishOnly": "yarn lint && yarn build"
   },
   "main": "dist/r-track.min.js",
   "module": "dist/r-track.esm.js",

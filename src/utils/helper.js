@@ -47,6 +47,8 @@ export const vaildEvent = (events, eventId) => {
  */
 export const vaildWatchKey = (stateKey, propKey) => {
   if (!stateKey && !propKey) {
-    throw new Error(`Missing arguments.{stateKey} or arguments.{propKey} in async track`);
+    throw new Error(
+      `Missing arguments.{stateKey} or arguments.{propKey} in async track`
+    );
   }
 };
