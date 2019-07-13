@@ -2,14 +2,14 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Saturday 2019-07-13 12:24:52 pm
+ * Last Modified: Saturday 2019-07-13 18:18:09 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
  * ------
  * Javascript will save your soul!
  */
-import React, { Component, createContext } from "react";
+import React, { Component } from "react";
 import trackEvents from "./tracks";
 import { connect } from 'react-redux'
 import { fetchUserInfo } from "./store/actions";
@@ -17,18 +17,15 @@ import { track } from "../";
 
 import './App.css';
 
-const trackContext = createContext(trackEvents)
-
 class App extends Component {
-  static contextType = trackContext;
-
   constructor(props) {
     super(props);
     this.buttonRef = null;
+    this.trackEvents = trackEvents;
     this.state = {
-      date: new Date(),
-      rest: null,
-      target: null
+      date: Date.now(),
+      target: null,
+      content: null
     };
   }
 
@@ -36,11 +33,12 @@ class App extends Component {
   handleClick(val, e) {
     console.log('handleClick 方法正常执行。并受到参数：', val, e.target)
     this.setState({
+      date: Date.now(),
       target: e.target
     })
   }
 
-  // @track("async.once", 22121, { stateKey: "date" })
+  // @track("async", 22121, { stateKey: "date" })
   // handleClick = async (val, e) => {
   //   e.persist();
   //   const response = await new Promise(resolve => {
@@ -48,10 +46,10 @@ class App extends Component {
   //       resolve({ date: Date.now() });
   //     }, 300);
   //   });
-  //   console.log('handleClick 方法正常执行。并受到参数：', val, response)
+  //   console.log('handleClick 方法正常执行。并受到参数：', val, response.date)
 
   //   this.setState({
-  //     date: response,
+  //     date: response.date,
   //     target: e.target
   //   })
   // }
@@ -67,7 +65,7 @@ class App extends Component {
     this.props.dispatch(fetchUserInfo());
   }
 
-  @track("async.delay", 22122, { delay: 3000, stateKey: "rest" })
+  @track("async.delay", 22122, { delay: 3000, stateKey: "content" })
   initContent = async (val) => {
     const response = await new Promise(resolve => {
       setTimeout(() => {
@@ -76,7 +74,7 @@ class App extends Component {
     });
     console.log('initContent 方法正常执行。并受到参数：', val)
     this.setState({
-      rest: response.data
+      content: response.data
     })
   }
 

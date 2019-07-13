@@ -2,7 +2,7 @@
  * Created Date: 2019-06-19
  * Author: 宋慧武
  * ------
- * Last Modified: Thursday 2019-07-11 23:57:02 pm
+ * Last Modified: Saturday 2019-07-13 18:18:48 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -26,15 +26,15 @@ export default {
     trackAction("2", { stt });
   },
   22120(context) {
-    console.log('上报22120埋点', context.props.userInfo);
+    console.log('上报22120埋点', context.userInfo);
     console.log('------------------------------------');
   },
   22121(context, val) {
-    console.log('上报22121埋点', context.state.target, val);
+    console.log('上报22121埋点', context.date, val);
     console.log('------------------------------------');
   },
   22122(context, val) {
-    console.log('上报22122埋点', context.state.rest, val);
+    console.log('上报22122埋点', context.content, val);
     console.log('------------------------------------');
   }
 };

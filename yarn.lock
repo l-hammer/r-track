@@ -6390,6 +6390,23 @@ mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@
   dependencies:
     minimist "0.0.8"
 
+mobx-react-lite@1.4.0:
+  version "1.4.0"
+  resolved "http://registry.npmjs.lianjia.com:7001/mobx-react-lite/download/mobx-react-lite-1.4.0.tgz#193beb5fdddf17ae61542f65ff951d84db402351"
+  integrity sha1-GTvrX93fF65hVC9l/5UdhNtAI1E=
+
+mobx-react@^6.1.1:
+  version "6.1.1"
+  resolved "http://registry.npmjs.lianjia.com:7001/mobx-react/download/mobx-react-6.1.1.tgz#24a2c8a3393890fa732b4efd34cc6dcccf6e0e7a"
+  integrity sha1-JKLIozk4kPpzK079NMxtzM9uDno=
+  dependencies:
+    mobx-react-lite "1.4.0"
+
+mobx@^5.11.0:
+  version "5.11.0"
+  resolved "http://registry.npmjs.lianjia.com:7001/mobx/download/mobx-5.11.0.tgz#58c64769bc2408ccde35fc2bac4cd5b8ae7b28a6"
+  integrity sha1-WMZHabwkCMzeNfwrrEzVuK57KKY=
+
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
