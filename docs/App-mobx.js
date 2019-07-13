@@ -21,7 +21,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.app.initContent('test');
+    this.props.app.initContent("test");
     this.props.app.fetchUserInfo();
   }
 
@@ -29,9 +29,9 @@ class App extends Component {
     const { handleClick } = this.props.app;
 
     return (
-      <button 
-        ref={ref => this.buttonRef = ref}
-        onClick={(e) => handleClick('123', e)}
+      <button
+        ref={ref => (this.buttonRef = ref)}
+        onClick={e => handleClick("123", e)}
       >
         Click Me
       </button>

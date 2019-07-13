@@ -2,7 +2,7 @@
  * Created Date: 2019-07-13
  * Author: 宋慧武
  * ------
- * Last Modified: Saturday 2019-07-13 20:45:47 pm
+ * Last Modified: Sunday 2019-07-14 01:06:26 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -26,11 +26,10 @@ class App {
   @action.bound
   @track("click.after", 22121)
   handleClick(val, e) {
-    console.log('handleClick 方法正常执行。并受到参数：', val, e.target)
+    console.log("handleClick 方法正常执行。并受到参数：", val, e.target);
     this.date = Date.now();
     this.target = e.target;
   }
-
   // @action.bound
   // @track("async", 22121, { stateKey: "date" })
   // handleClick = async (val, e) => {
@@ -57,26 +56,26 @@ class App {
       }, 300);
     });
 
-    console.log('fetchUserInfo 方法正常执行');
+    console.log("fetchUserInfo 方法正常执行");
     runInAction(() => {
       this.userInfo = rest;
     });
-  }
+  };
 
   @action
   @track("async.delay", 22122, { delay: 3000, stateKey: "content" })
-  initContent = async (val) => {
+  initContent = async val => {
     const response = await new Promise(resolve => {
       setTimeout(() => {
         resolve({ data: "success" });
       }, 500);
     });
-    console.log('initContent 方法正常执行。并受到参数：', val)
+    console.log("initContent 方法正常执行。并受到参数：", val);
 
     runInAction(() => {
       this.content = response.data;
-    })
-  }
+    });
+  };
 }
 
 export default new App();

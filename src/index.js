@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Saturday 2019-07-13 20:49:32 pm
+ * Last Modified: Sunday 2019-07-14 01:13:46 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -12,12 +12,12 @@
 import { isVisible } from "./utils/dom";
 import { zipObject, vaildEvent, vaildWatchKey } from "./utils/helper";
 
-const ONCE = 'once';
+const ONCE = "once";
 const modifiers = {
   CLICK: "click",
   CLICK_AFTER: "click.after",
   ASYNC: "async",
-  ASYNC_DELAY: "async.delay",
+  ASYNC_DELAY: "async.delay"
 };
 
 /**
@@ -25,16 +25,16 @@ const modifiers = {
  * @param {Function} reaction 如果为 Mobx Class 则需要注入 mobx.reaction 来监听通过异步action 对 state 的改变
  * @param {Object} trackEvents 当前页面需要的埋点事件
  */
-export const inject = (...props) => (target) => {
+export const inject = (...props) => target => {
   Object.assign(target.prototype, ...props);
-}
+};
 
 /**
  * @desc track 埋点装饰器
  * @param {String} modifier 修饰符，对应的埋点类型
  * @param {Number | String} eventId 埋点事件id
  * @param {Object} params 自定义参数，目前支持tateKey、propKey、delay、ref
- * 
+ *
  * @property[stateKey] 对应组件 state 或者 mobx observable 中 key
  * @property[propKey] 对应组件 props 中 key
  * @property[delay] 埋点延迟时间
@@ -43,7 +43,7 @@ export const inject = (...props) => (target) => {
 export function track(modifier, eventId, params = {}) {
   const [mdfs] = zipObject(modifiers);
 
-  if (!mdfs.includes(modifier.replace(/\.once/g, ''))) {
+  if (!mdfs.includes(modifier.replace(/\.once/g, ""))) {
     throw new Error(`modifier '${modifier}' does not exist`);
   }
 
@@ -67,10 +67,12 @@ export function track(modifier, eventId, params = {}) {
           once && (this[onceProp] = true);
         };
         const fn = value ? value.bind(this) : initializer.apply(this, args);
-        const queue = after ? [fn, isRC ? () => this.setState({}, tck) : tck] : [tck, fn];
+        const queue = after
+          ? [fn, isRC ? () => this.setState({}, tck) : tck]
+          : [tck, fn];
 
         return queue.forEach(sub => sub(...args));
-      }
+      };
     }
     // 异步行为埋点
     else {
@@ -91,18 +93,25 @@ export function track(modifier, eventId, params = {}) {
         !this.tckQueuePropKeys && (this.tckQueuePropKeys = []); //
         !this.tckQueueStateKeys && (this.tckQueueStateKeys = []); //
 
-        if (modifier === modifiers.ASYNC_DELAY || modifier === modifiers.ASYNC_DELAY + ".once") {
+        if (
+          modifier === modifiers.ASYNC_DELAY ||
+          modifier === modifiers.ASYNC_DELAY + ".once"
+        ) {
           tck = () => {
             const { delay = 0, ref } = params;
             const ele = this[ref] || document;
 
             this.$timer = setTimeout(() => {
               isRC && (context = { ...this.state, ...this.props });
-              isVisible(ele) && this.trackEvents[eventId].call(null, context, ...args);
+              isVisible(ele) &&
+                this.trackEvents[eventId].call(null, context, ...args);
               clearTimeout(this.$timer);
             }, delay);
           };
-        } else if (modifier === modifiers.ASYNC || modifier === modifiers.ASYNC + ".once") {
+        } else if (
+          modifier === modifiers.ASYNC ||
+          modifier === modifiers.ASYNC + ".once"
+        ) {
           tck = () => {
             isRC && (context = { ...this.state, ...this.props });
             if (propKey && this[`${watchPropKey}_${ONCE}`]) return;
@@ -113,8 +122,12 @@ export function track(modifier, eventId, params = {}) {
           };
         }
 
-        propKey && (this.tckQueue[watchPropKey] = [tck]) && this.tckQueuePropKeys.push(watchPropKey);
-        stateKey && (this.tckQueue[watchStateKey] = [tck]) && this.tckQueueStateKeys.push(watchStateKey);
+        propKey &&
+          (this.tckQueue[watchPropKey] = [tck]) &&
+          this.tckQueuePropKeys.push(watchPropKey);
+        stateKey &&
+          (this.tckQueue[watchStateKey] = [tck]) &&
+          this.tckQueueStateKeys.push(watchStateKey);
 
         if (isRC && !this.getSnapshotBeforeUpdate) {
           this.getSnapshotBeforeUpdate = (prevProps, prevState) => {
@@ -136,30 +149,33 @@ export function track(modifier, eventId, params = {}) {
               oldVal !== newVal && cbks.forEach(sub => sub && sub());
             });
             return null;
-          }
+          };
         } else {
           if (this.reaction) {
             const cbks = this.tckQueue[watchStateKey];
-            const disposer = this.reaction(() => this[stateKey], () => {
-              cbks.forEach(sub => sub && sub());
-              disposer();
-            });
+            const disposer = this.reaction(
+              () => this[stateKey],
+              () => {
+                cbks.forEach(sub => sub && sub());
+                disposer();
+              }
+            );
           }
         }
         return fn(...args);
-      }
+      };
     }
 
     if (value) {
       descriptor.value = function(...args) {
         return handler.apply(this, args);
-      }
+      };
     }
     // 兼容箭头函数 https://github.com/MuYunyun/diana/issues/7
     if (initializer) {
       descriptor.initializer = function() {
         return handler;
-      }
+      };
     }
-  }
+  };
 }

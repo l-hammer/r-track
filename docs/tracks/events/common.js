@@ -26,15 +26,15 @@ export default {
     trackAction("2", { stt });
   },
   22120(context) {
-    console.log('上报22120埋点', context.userInfo);
-    console.log('------------------------------------');
+    console.log("上报22120埋点", context.userInfo);
+    console.log("------------------------------------");
   },
   22121(context, val) {
-    console.log('上报22121埋点', context.date, val);
-    console.log('------------------------------------');
+    console.log("上报22121埋点", context.date, val);
+    console.log("------------------------------------");
   },
   22122(context, val) {
-    console.log('上报22122埋点', context.content, val);
-    console.log('------------------------------------');
+    console.log("上报22122埋点", context.content, val);
+    console.log("------------------------------------");
   }
 };
