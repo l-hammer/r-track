@@ -1,7 +1,8 @@
 {
   "name": "react-track",
   "version": "0.1.0",
-  "private": true,
+  "description": "一个基于装饰器的埋点业务插件",
+  "author": "LHammer <lhammer@qq.com>",
   "scripts": {
     "watch": "cross-env NODE_ENV=development rollup --config build/rollup.config.es.js --watch",
     "build": "yarn build:es && yarn build:browser",
