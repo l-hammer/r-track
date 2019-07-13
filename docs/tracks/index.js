@@ -2,7 +2,7 @@
  * Created Date: 2019-06-19
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-07-08 17:12:49 pm
+ * Last Modified: Saturday 2019-07-13 12:00:38 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -12,8 +12,11 @@
 import "./config";
 import "./udig-sdk";
 
-const eventModules = require.context("./events", false, /\.js/);
+import common from "./events/common";
 
-export default eventModules.keys().reduce((events, module) => {
-  return Object.assign(events, eventModules(module).default);
-}, {});
+// const eventModules = require.context("./events", false, /\.js/);
+// export default eventModules.keys().reduce((events, module) => {
+//   return Object.assign(events, eventModules(module).default);
+// }, {});
+
+export default common;

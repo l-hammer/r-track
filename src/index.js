@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Friday 2019-07-12 00:25:09 am
+ * Last Modified: Saturday 2019-07-13 12:25:27 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -10,7 +10,7 @@
  * Javascript will save your soul!
  */
 import { isVisible } from "./utils/dom";
-import { zipObject, vaildEvent } from "./utils/helper";
+import { zipObject, vaildEvent, vaildWatchKey } from "./utils/helper";
 
 const ONCE = 'once';
 const modifiers = {
@@ -65,12 +65,13 @@ export function track(modifier, eventId, params = {}) {
         let tck;
         const once = modifier.includes(ONCE);
         const fn = value ? value.bind(this) : initializer.apply(this, args);
-        const { state: stateKey, prop: propKey } = params;
-        const watchPropKey = `${name}_${propKey}_${eventId}`;
+        const { stateKey, propKey } = params;
+        const watchPropKey = `${name}_${propKey}_${eventId}`; // 保证key的唯一性
         const watchStateKey = `${name}_${stateKey}_${eventId}`;
 
-        // todo check stateKey & propKey 是否存在
-        vaildEvent(this.context, eventId); // 检测eventId是否合法
+        vaildEvent(this.context, eventId);
+        vaildWatchKey(stateKey, propKey);
+
         !this.tckQueue && (this.tckQueue = {}); // 在当前实例维护一个异步埋点队列
         !this.propQueueKeys && (this.propQueueKeys = []); //
         !this.stateQueueKeys && (this.stateQueueKeys = []); //
@@ -79,6 +80,7 @@ export function track(modifier, eventId, params = {}) {
           tck = () => {
             const { delay = 0, ref } = params;
             const ele = this[ref] || document;
+
             this.$timer = setTimeout(() => {
               isVisible(ele) && this.context[eventId].call(null, this, ...args);
               clearTimeout(this.$timer);
@@ -116,9 +118,7 @@ export function track(modifier, eventId, params = {}) {
                 newVal = this.state[key];
                 oldVal = prevState[key];
                 cbks = this.tckQueue[watchKey];
-                // console.log(this.tckQueue, cbks)
               }
-              // console.log(oldVal, newVal, oldVal === newVal);
               oldVal !== newVal && cbks.forEach(sub => sub && sub());
             })
             return true;

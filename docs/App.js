@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Friday 2019-07-12 00:26:16 am
+ * Last Modified: Saturday 2019-07-13 12:24:52 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -40,7 +40,7 @@ class App extends Component {
     })
   }
 
-  // @track("async.once", 22121, { state: "date" })
+  // @track("async.once", 22121, { stateKey: "date" })
   // handleClick = async (val, e) => {
   //   e.persist();
   //   const response = await new Promise(resolve => {
@@ -61,13 +61,13 @@ class App extends Component {
     this.getUserInfo();
   }
 
-  @track("async", 22120, { prop: "userInfo" })
+  @track("async", 22120, { propKey: "userInfo" })
   getUserInfo = () => {
     console.log('getUserInfo 方法正常执行');
     this.props.dispatch(fetchUserInfo());
   }
 
-  @track("async.delay", 22122, { delay: 3000, state: "rest" })
+  @track("async.delay", 22122, { delay: 3000, stateKey: "rest" })
   initContent = async (val) => {
     const response = await new Promise(resolve => {
       setTimeout(() => {
