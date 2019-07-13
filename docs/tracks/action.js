@@ -2,7 +2,7 @@
  * Created Date: 2019-06-19
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-07-08 22:45:35 pm
+ * Last Modified: Sunday 2019-07-14 02:29:20 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -18,18 +18,14 @@ import $log from "@/utils/logger";
  * @param {Object} action 行为参数
  * @param {Object} other 基本参数 一般不需要传此参数
  */
-export default function trackAction(evt, actionsAddtion, addtional = {}) {
-  try {
-    window.$HPLOG.send(evt, {
-      action: {
-        time: format(Date.now()),
-        ...actionsAddtion
-      },
-      pid: "crm_m_cservice",
-      event: "mElementClick", // 默认类型
-      ...addtional
-    });
-  } catch (error) {
-    $log.error(error);
-  }
+/**
+ * @desc 模拟埋点Action
+ */
+export default function trackAction(evt, addtional = {}) {
+  const data = {
+    evt,
+    ...addtional,
+    action_time: format(Date.now())
+  };
+  $log(data);
 }
