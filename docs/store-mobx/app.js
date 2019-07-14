@@ -2,7 +2,7 @@
  * Created Date: 2019-07-13
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 17:19:53 pm
+ * Last Modified: Sunday 2019-07-14 23:06:26 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -53,7 +53,7 @@ class App {
     const rest = await new Promise(resolve => {
       setTimeout(() => {
         resolve({ name: "LHammer", age: "18" });
-      }, 300);
+      }, 100);
     });
 
     console.log("fetchUserInfo 方法正常执行");
@@ -68,7 +68,7 @@ class App {
     const response = await new Promise(resolve => {
       setTimeout(() => {
         resolve({ data: "success" });
-      }, 500);
+      }, 300);
     });
     console.log("initContent 方法正常执行。并受到参数：", val);
 

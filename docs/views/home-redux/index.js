@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 22:26:01 pm
+ * Last Modified: Sunday 2019-07-14 23:08:28 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -79,7 +79,7 @@ class Home extends Component {
     const response = await new Promise(resolve => {
       setTimeout(() => {
         resolve({ data: "success" });
-      }, 500);
+      }, 300);
     });
     console.log("initContent 方法正常执行。并受到参数：", val);
     this.setState({
