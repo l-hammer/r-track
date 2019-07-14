@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 01:13:46 am
+ * Last Modified: Sunday 2019-07-14 18:41:03 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -14,6 +14,7 @@ import { zipObject, vaildEvent, vaildWatchKey } from "./utils/helper";
 
 const ONCE = "once";
 const modifiers = {
+  UVPV: "UVPV", // 特殊的修饰符
   CLICK: "click",
   CLICK_AFTER: "click.after",
   ASYNC: "async",
@@ -51,19 +52,41 @@ export function track(modifier, eventId, params = {}) {
     let handler;
     const { value, initializer } = descriptor;
 
-    // 事件行为埋点
-    if (modifier.includes(modifiers.CLICK)) {
+    // 页面初始化埋点
+    if (modifier.includes(modifiers.UVPV)) {
       handler = function(...args) {
         let context = this;
         const isRC = this.isReactComponent; // 是否为 react 组件
+        const evts = this.trackEvents || this.props.trackEvents;
+
+        if (!isRC) {
+          throw new Error(`UVPV track only support in react component~`);
+        }
+
+        const fn = value ? value.bind(this) : initializer.apply(this, args);
+        const tck = () => {
+          vaildEvent(evts, modifier); // 检测eventId是否合法
+          context = { ...this.state, ...this.props };
+          evts[modifier].call(null, context, ...args);
+        };
+
+        return [tck, fn].forEach(sub => sub(...args));
+      };
+    }
+    // 事件行为埋点
+    else if (modifier.includes(modifiers.CLICK)) {
+      handler = function(...args) {
+        let context = this;
+        const isRC = this.isReactComponent; // 是否为 react 组件
+        const evts = this.trackEvents || this.props.trackEvents;
         const once = modifier.includes(ONCE);
         const onceProp = `${name}_${eventId}`;
         const after = modifier.includes(modifiers.CLICK_AFTER);
         const tck = () => {
           if (this[onceProp]) return; // 如果存在once修饰符，且为true则直接返回
-          vaildEvent(this.trackEvents, eventId); // 检测eventId是否合法
+          vaildEvent(evts, eventId); // 检测eventId是否合法
           isRC && (context = { ...this.state, ...this.props });
-          this.trackEvents[eventId].call(null, context, ...args);
+          evts[eventId].call(null, context, ...args);
           once && (this[onceProp] = true);
         };
         const fn = value ? value.bind(this) : initializer.apply(this, args);
@@ -80,13 +103,14 @@ export function track(modifier, eventId, params = {}) {
         let tck;
         let context = this;
         const isRC = this.isReactComponent; // 是否为 react 组件
+        const evts = this.trackEvents || this.props.trackEvents;
         const once = modifier.includes(ONCE);
         const fn = value ? value.bind(this) : initializer.apply(this, args);
         const { stateKey, propKey } = params;
         const watchPropKey = `${name}_${propKey}_${eventId}`; // 保证key的唯一性
         const watchStateKey = `${name}_${stateKey}_${eventId}`;
 
-        vaildEvent(this.trackEvents, eventId);
+        vaildEvent(evts, eventId);
         vaildWatchKey(stateKey, propKey);
 
         !this.tckQueue && (this.tckQueue = {}); // 在当前实例维护一个异步埋点队列
@@ -101,10 +125,10 @@ export function track(modifier, eventId, params = {}) {
             const { delay = 0, ref } = params;
             const ele = this[ref] || document;
 
+            this.$timer && clearTimeout(this.$timer);
             this.$timer = setTimeout(() => {
               isRC && (context = { ...this.state, ...this.props });
-              isVisible(ele) &&
-                this.trackEvents[eventId].call(null, context, ...args);
+              isVisible(ele) && evts[eventId].call(null, context, ...args);
               clearTimeout(this.$timer);
             }, delay);
           };
@@ -116,7 +140,7 @@ export function track(modifier, eventId, params = {}) {
             isRC && (context = { ...this.state, ...this.props });
             if (propKey && this[`${watchPropKey}_${ONCE}`]) return;
             if (stateKey && this[`${watchStateKey}_${ONCE}`]) return;
-            this.trackEvents[eventId].call(null, context, ...args);
+            evts[eventId].call(null, context, ...args);
             once && propKey && (this[`${watchPropKey}_${ONCE}`] = true);
             once && stateKey && (this[`${watchStateKey}_${ONCE}`] = true);
           };
@@ -129,6 +153,23 @@ export function track(modifier, eventId, params = {}) {
           (this.tckQueue[watchStateKey] = [tck]) &&
           this.tckQueueStateKeys.push(watchStateKey);
 
+        // 页面卸载时清除进行中的定时器
+        if (isRC && !this.componentWillUnmount) {
+          this.needMergeWillUnmount = false;
+          this.componentWillUnmount = () => {
+            this.$timer && clearTimeout(this.$timer);
+          };
+        } else if (
+          this.componentWillUnmount &&
+          this.needMergeWillUnmount !== false
+        ) {
+          const willUnmountRef = this.componentWillUnmount;
+          this.componentWillUnmount = () => {
+            willUnmountRef.apply(this);
+            this.$timer && clearTimeout(this.$timer);
+          };
+        }
+        // 通过 react 生命周期函数 getSnapshotBeforeUpdate diff 值的变化控制埋点的上报
         if (isRC && !this.getSnapshotBeforeUpdate) {
           this.getSnapshotBeforeUpdate = (prevProps, prevState) => {
             Object.keys(this.tckQueue).forEach(watchKey => {
@@ -150,17 +191,15 @@ export function track(modifier, eventId, params = {}) {
             });
             return null;
           };
-        } else {
-          if (this.reaction) {
-            const cbks = this.tckQueue[watchStateKey];
-            const disposer = this.reaction(
-              () => this[stateKey],
-              () => {
-                cbks.forEach(sub => sub && sub());
-                disposer();
-              }
-            );
-          }
+        } else if (!isRC && this.reaction) {
+          const cbks = this.tckQueue[watchStateKey];
+          const disposer = this.reaction(
+            () => this[stateKey],
+            () => {
+              cbks.forEach(sub => sub && sub());
+              disposer();
+            }
+          );
         }
         return fn(...args);
       };
