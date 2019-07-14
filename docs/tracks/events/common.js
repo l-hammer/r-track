@@ -2,7 +2,7 @@
  * Created Date: 2019-06-19
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 17:51:10 pm
+ * Last Modified: Sunday 2019-07-14 21:29:25 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -20,9 +20,9 @@ export default {
   },
   /**
    * 页面停留时间埋点（Time on Page）
-   * @param {String} stt 进入页面时长，单位为秒
+   * @param {String} stt 进入页面时长，单位为毫秒
    */
-  TONP({ stt }) {
+  TONP(_, { stt }) {
     trackAction("2", { stt });
   },
   22120({ userInfo }) {

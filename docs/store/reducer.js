@@ -16,8 +16,8 @@ export default (state = {}, action) => {
     case TYPES.GET_USERINFO:
       return Object.assign({}, state, {
         userInfo: action.payload
-      })
+      });
     default:
       return state;
   }
-}
+};

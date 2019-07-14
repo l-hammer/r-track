@@ -9,12 +9,8 @@
  * ------
  * Javascript will save your soul!
  */
-import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
+import { createStore, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
 import reducer from "./reducer";
 
-export default createStore(
-  reducer,
-  compose(
-    applyMiddleware(thunk)
-));
+export default createStore(reducer, compose(applyMiddleware(thunk)));

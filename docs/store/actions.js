@@ -11,21 +11,21 @@
  */
 export const TYPES = {
   GET_USERINFO: "GET_USERINFO"
-}
+};
 
 const getUserInfo = payload => ({
   type: TYPES.GET_USERINFO,
   payload
-})
+});
 
 export function fetchUserInfo() {
-  return async (dispatch) => {
+  return async dispatch => {
     const rest = await new Promise(resolve => {
       setTimeout(() => {
         resolve({ name: "LHammer", age: "18" });
       }, 300);
     });
 
-    dispatch(getUserInfo(rest))
-  }
+    dispatch(getUserInfo(rest));
+  };
 }

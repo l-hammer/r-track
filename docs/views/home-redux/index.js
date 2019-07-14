@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 17:41:34 pm
+ * Last Modified: Sunday 2019-07-14 22:26:01 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -11,6 +11,7 @@
  */
 import React, { Component } from "react";
 import { Provider, connect } from "react-redux";
+import { withRouter } from "react-router";
 import store from "@/store";
 import trackEvents from "@/tracks";
 import { fetchUserInfo } from "@/store/actions";
@@ -22,6 +23,7 @@ function mapStateToProps(state) {
   };
 }
 
+@withRouter
 @connect(mapStateToProps)
 @inject({ trackEvents })
 class Home extends Component {
@@ -60,10 +62,11 @@ class Home extends Component {
   //   })
   // }
   @track("UVPV")
-  componentDidMount() {
+  @track("TONP")
+  componentDidMount = () => {
     this.initContent("test");
     this.getUserInfo();
-  }
+  };
 
   @track("async", 22120, { propKey: "userInfo" })
   getUserInfo = () => {
