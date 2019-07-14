@@ -2,7 +2,7 @@
  * Created Date: 2019-06-19
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 02:29:20 am
+ * Last Modified: Sunday 2019-07-14 17:44:56 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -27,5 +27,6 @@ export default function trackAction(evt, addtional = {}) {
     ...addtional,
     action_time: format(Date.now())
   };
+
   $log(data);
 }

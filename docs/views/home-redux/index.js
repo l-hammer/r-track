@@ -1,8 +1,8 @@
 /*
- * Created Date: 2019-07-08
+ * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 01:14:21 am
+ * Last Modified: Sunday 2019-07-14 17:41:34 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -10,15 +10,21 @@
  * Javascript will save your soul!
  */
 import React, { Component } from "react";
-import trackEvents from "./tracks";
-import { connect } from "react-redux";
-import { fetchUserInfo } from "./store/actions";
-import { track, inject } from "../";
+import { Provider, connect } from "react-redux";
+import store from "@/store";
+import trackEvents from "@/tracks";
+import { fetchUserInfo } from "@/store/actions";
+import { track, inject } from "../../../";
 
-import "./App.css";
+function mapStateToProps(state) {
+  return {
+    userInfo: state.userInfo
+  };
+}
 
+@connect(mapStateToProps)
 @inject({ trackEvents })
-class App extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     this.buttonRef = null;
@@ -53,7 +59,7 @@ class App extends Component {
   //     target: e.target
   //   })
   // }
-
+  @track("UVPV")
   componentDidMount() {
     this.initContent("test");
     this.getUserInfo();
@@ -90,4 +96,12 @@ class App extends Component {
   }
 }
 
-export default connect(state => ({ userInfo: state.userInfo }))(App);
+export default class WrapHome extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <Home />
+      </Provider>
+    );
+  }
+}

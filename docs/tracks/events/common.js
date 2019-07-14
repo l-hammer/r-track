@@ -2,7 +2,7 @@
  * Created Date: 2019-06-19
  * Author: 宋慧武
  * ------
- * Last Modified: Saturday 2019-07-13 18:18:48 pm
+ * Last Modified: Sunday 2019-07-14 17:51:10 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -25,16 +25,21 @@ export default {
   TONP({ stt }) {
     trackAction("2", { stt });
   },
-  22120(context) {
-    console.log("上报22120埋点", context.userInfo);
-    console.log("------------------------------------");
+  22120({ userInfo }) {
+    trackAction("22120", {
+      userInfo: JSON.stringify(userInfo)
+    });
   },
   22121(context, val) {
-    console.log("上报22121埋点", context.date, val);
-    console.log("------------------------------------");
+    trackAction("22121", {
+      tamp: context.date,
+      param: val
+    });
   },
   22122(context, val) {
-    console.log("上报22122埋点", context.content, val);
-    console.log("------------------------------------");
+    trackAction("22122", {
+      content: context.content,
+      param: val
+    });
   }
 };

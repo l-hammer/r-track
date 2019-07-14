@@ -1,8 +1,8 @@
 /*
- * Created Date: 2019-07-13
+ * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Saturday 2019-07-13 18:13:23 pm
+ * Last Modified: Sunday 2019-07-14 17:55:35 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -10,16 +10,23 @@
  * Javascript will save your soul!
  */
 import React, { Component } from "react";
-import { inject, observer } from "mobx-react";
+import { Provider, inject, observer } from "mobx-react";
+import store from "@/store-mobx";
+import trackEvents from "@/tracks";
+import { track } from "../../../";
 
-@inject("app")
+@inject(({ app }) => ({
+  app,
+  trackEvents
+}))
 @observer
-class App extends Component {
+class Detail extends Component {
   constructor(props) {
     super(props);
     this.buttonRef = null;
   }
 
+  @track("UVPV")
   componentDidMount() {
     this.props.app.initContent("test");
     this.props.app.fetchUserInfo();
@@ -33,10 +40,18 @@ class App extends Component {
         ref={ref => (this.buttonRef = ref)}
         onClick={e => handleClick("123", e)}
       >
-        Click Me
+        Click Mee
       </button>
     );
   }
 }
 
-export default App;
+export default class WrapDetail extends Component {
+  render() {
+    return (
+      <Provider {...store}>
+        <Detail />
+      </Provider>
+    );
+  }
+}

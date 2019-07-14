@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-07-08 22:51:07 pm
+ * Last Modified: Sunday 2019-07-14 17:43:32 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -16,7 +16,7 @@ const message = () => format(Date.now());
 
 const $log = rest => {
   logger.log(
-    `%c ${message()} 小贝SDK`,
+    `%c ${message()} r-track`,
     "color: #03A9F4; font-weight: bold",
     rest
   );
@@ -24,7 +24,7 @@ const $log = rest => {
 
 $log.error = rest => {
   logger.log(
-    `%c ${message()} 小贝SDK`,
+    `%c ${message()} r-track`,
     "color: #F56C6C; font-weight: bold",
     rest
   );
