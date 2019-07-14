@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 18:41:03 pm
+ * Last Modified: Sunday 2019-07-14 22:54:08 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -10,11 +10,18 @@
  * Javascript will save your soul!
  */
 import { isVisible } from "./utils/dom";
-import { zipObject, vaildEvent, vaildWatchKey } from "./utils/helper";
+import {
+  zipObject,
+  vaildEvent,
+  vaildWatchKey,
+  vaildReactComponent,
+  clearTimeoutQueue
+} from "./utils/helper";
 
 const ONCE = "once";
 const modifiers = {
   UVPV: "UVPV", // 特殊的修饰符
+  TONP: "TONP", // 特殊的修饰符，表示页面停留时长
   CLICK: "click",
   CLICK_AFTER: "click.after",
   ASYNC: "async",
@@ -47,30 +54,56 @@ export function track(modifier, eventId, params = {}) {
   if (!mdfs.includes(modifier.replace(/\.once/g, ""))) {
     throw new Error(`modifier '${modifier}' does not exist`);
   }
-
   return (_, name, descriptor) => {
     let handler;
     const { value, initializer } = descriptor;
-
     // 页面初始化埋点
     if (modifier.includes(modifiers.UVPV)) {
       handler = function(...args) {
-        let context = this;
-        const isRC = this.isReactComponent; // 是否为 react 组件
+        vaildReactComponent(this.isReactComponent);
+
         const evts = this.trackEvents || this.props.trackEvents;
-
-        if (!isRC) {
-          throw new Error(`UVPV track only support in react component~`);
-        }
-
         const fn = value ? value.bind(this) : initializer.apply(this, args);
         const tck = () => {
-          vaildEvent(evts, modifier); // 检测eventId是否合法
-          context = { ...this.state, ...this.props };
+          const context = { ...this.state, ...this.props };
           evts[modifier].call(null, context, ...args);
         };
 
         return [tck, fn].forEach(sub => sub(...args));
+      };
+    }
+    // 设置进入页面时间
+    else if (modifier.includes(modifiers.TONP)) {
+      handler = function(...args) {
+        const isRC = vaildReactComponent(this.isReactComponent); // 是否为 react 组件
+        const evts = this.trackEvents || this.props.trackEvents;
+        const tck = () => {
+          const stt = Date.now() - this.__trackPageEntryTime;
+          const context = { ...this.state, ...this.props };
+
+          evts[modifier].call(null, context, { stt });
+        };
+
+        this.__trackPageEntryTime = Date.now();
+        // 页面卸载前上报埋点
+        if (isRC && !this.componentWillUnmount) {
+          this.needMergeTONPWillUnmount = false;
+          this.componentWillUnmount = () => tck();
+        } else if (
+          this.componentWillUnmount &&
+          this.needMergeTONPWillUnmount !== false
+        ) {
+          const willUnmountRef = this.componentWillUnmount;
+
+          this.componentWillUnmount = () => {
+            willUnmountRef.apply(this);
+            tck();
+          };
+        }
+
+        return value
+          ? value.apply(this, args)
+          : initializer.apply(this, args)(...args);
       };
     }
     // 事件行为埋点
@@ -121,17 +154,36 @@ export function track(modifier, eventId, params = {}) {
           modifier === modifiers.ASYNC_DELAY ||
           modifier === modifiers.ASYNC_DELAY + ".once"
         ) {
+          !this.tckTimerQueue && (this.tckTimerQueue = {}); // 定时器队列
           tck = () => {
             const { delay = 0, ref } = params;
             const ele = this[ref] || document;
+            const timer = this.tckTimerQueue[eventId];
 
-            this.$timer && clearTimeout(this.$timer);
-            this.$timer = setTimeout(() => {
+            timer && clearTimeout(timer);
+            this.tckTimerQueue[eventId] = setTimeout(() => {
               isRC && (context = { ...this.state, ...this.props });
               isVisible(ele) && evts[eventId].call(null, context, ...args);
-              clearTimeout(this.$timer);
+              clearTimeout(this.tckTimerQueue[eventId]);
             }, delay);
           };
+
+          // 页面卸载时清除进行中的定时器
+          if (isRC && !this.componentWillUnmount) {
+            this.needMergeWillUnmount = false;
+            this.componentWillUnmount = () => {
+              clearTimeoutQueue(this.tckTimerQueue);
+            };
+          } else if (
+            this.componentWillUnmount &&
+            this.needMergeWillUnmount !== false
+          ) {
+            const willUnmountRef = this.componentWillUnmount;
+            this.componentWillUnmount = () => {
+              willUnmountRef.apply(this);
+              clearTimeoutQueue(this.tckTimerQueue);
+            };
+          }
         } else if (
           modifier === modifiers.ASYNC ||
           modifier === modifiers.ASYNC + ".once"
@@ -153,22 +205,6 @@ export function track(modifier, eventId, params = {}) {
           (this.tckQueue[watchStateKey] = [tck]) &&
           this.tckQueueStateKeys.push(watchStateKey);
 
-        // 页面卸载时清除进行中的定时器
-        if (isRC && !this.componentWillUnmount) {
-          this.needMergeWillUnmount = false;
-          this.componentWillUnmount = () => {
-            this.$timer && clearTimeout(this.$timer);
-          };
-        } else if (
-          this.componentWillUnmount &&
-          this.needMergeWillUnmount !== false
-        ) {
-          const willUnmountRef = this.componentWillUnmount;
-          this.componentWillUnmount = () => {
-            willUnmountRef.apply(this);
-            this.$timer && clearTimeout(this.$timer);
-          };
-        }
         // 通过 react 生命周期函数 getSnapshotBeforeUpdate diff 值的变化控制埋点的上报
         if (isRC && !this.getSnapshotBeforeUpdate) {
           this.getSnapshotBeforeUpdate = (prevProps, prevState) => {
@@ -213,7 +249,7 @@ export function track(modifier, eventId, params = {}) {
     // 兼容箭头函数 https://github.com/MuYunyun/diana/issues/7
     if (initializer) {
       descriptor.initializer = function() {
-        return handler;
+        return handler.bind(this);
       };
     }
   };

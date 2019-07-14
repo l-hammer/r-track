@@ -2,7 +2,7 @@
  * Created Date: 2019-07-11
  * Author: 宋慧武
  * ------
- * Last Modified: Saturday 2019-07-13 12:24:04 pm
+ * Last Modified: Sunday 2019-07-14 22:56:22 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -31,7 +31,6 @@ export const isFun = v => typeof v === "function" || false;
  * @desc chenck 埋点ID是否合法
  *
  * @param {Object} value
- * @returns {Array} [keys, values]
  */
 export const vaildEvent = (events, eventId) => {
   if (!isFun(events[eventId])) {
@@ -43,7 +42,6 @@ export const vaildEvent = (events, eventId) => {
  * @desc check 异步埋点监听key是否存在
  *
  * @param {Object} value
- * @returns {Array} [keys, values]
  */
 export const vaildWatchKey = (stateKey, propKey) => {
   if (!stateKey && !propKey) {
@@ -51,4 +49,26 @@ export const vaildWatchKey = (stateKey, propKey) => {
       `Missing arguments.{stateKey} or arguments.{propKey} in async track`
     );
   }
+};
+
+/**
+ * @desc check 当前实例是否为react组件
+ */
+export const vaildReactComponent = isRC => {
+  if (!isRC) {
+    throw new Error(
+      `Missing arguments.{stateKey} or arguments.{propKey} in async track`
+    );
+  } else {
+    return isRC;
+  }
+};
+
+/**
+ * @desc 清除定时器
+ */
+export const clearTimeoutQueue = (queue = []) => {
+  Object.keys(queue).forEach(timer => {
+    clearTimeout(queue[timer]);
+  });
 };
