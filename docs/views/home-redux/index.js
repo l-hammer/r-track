@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 23:08:28 pm
+ * Last Modified: Monday 2019-07-15 16:57:08 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -13,7 +13,7 @@ import React, { Component } from "react";
 import { Provider, connect } from "react-redux";
 import { withRouter } from "react-router";
 import store from "@/store";
-import trackEvents from "@/tracks";
+import { home as trackEvents } from "@/tracks";
 import { fetchUserInfo } from "@/store/actions";
 import { track, inject } from "../../../";
 
@@ -61,6 +61,7 @@ class Home extends Component {
   //     target: e.target
   //   })
   // }
+
   @track("UVPV")
   @track("TONP")
   componentDidMount = () => {

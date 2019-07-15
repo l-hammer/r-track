@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 21:40:53 pm
+ * Last Modified: Monday 2019-07-15 14:23:54 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -13,7 +13,7 @@ import React, { Component } from "react";
 import { Provider, inject, observer } from "mobx-react";
 import { withRouter } from "react-router";
 import store from "@/store-mobx";
-import trackEvents from "@/tracks";
+import { home as trackEvents } from "@/tracks";
 import { track } from "../../../";
 
 @withRouter

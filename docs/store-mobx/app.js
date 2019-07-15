@@ -2,7 +2,7 @@
  * Created Date: 2019-07-13
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 23:06:26 pm
+ * Last Modified: Monday 2019-07-15 16:57:44 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -10,7 +10,7 @@
  * Javascript will save your soul!
  */
 import { observable, action, runInAction, reaction } from "mobx";
-import trackEvents from "@/tracks";
+import { home as trackEvents } from "@/tracks";
 import { track, inject } from "../../";
 
 @inject({
