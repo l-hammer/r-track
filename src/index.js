@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 22:54:08 pm
+ * Last Modified: Tuesday 2019-07-16 10:32:28 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -209,21 +209,21 @@ export function track(modifier, eventId, params = {}) {
         if (isRC && !this.getSnapshotBeforeUpdate) {
           this.getSnapshotBeforeUpdate = (prevProps, prevState) => {
             Object.keys(this.tckQueue).forEach(watchKey => {
-              let oldVal, newVal, cbks, key;
+              let oldVal, newVal, key;
 
+              key = watchKey.split("_")[1];
               if (this.tckQueuePropKeys.includes(watchKey)) {
-                key = watchKey.split("_")[1];
                 newVal = this.props[key];
                 oldVal = prevProps[key];
-                cbks = this.tckQueue[watchKey];
               }
               if (this.tckQueueStateKeys.includes(watchKey)) {
-                key = watchKey.split("_")[1];
                 newVal = this.state[key];
                 oldVal = prevState[key];
-                cbks = this.tckQueue[watchKey];
               }
-              oldVal !== newVal && cbks.forEach(sub => sub && sub());
+              if (oldVal !== newVal) {
+                this.tckQueue[watchKey].forEach(sub => sub && sub());
+                this.tckQueue[watchKey] = []; // 清空当前watch的埋点队列
+              }
             });
             return null;
           };

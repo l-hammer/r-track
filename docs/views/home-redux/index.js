@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-07-15 16:57:08 pm
+ * Last Modified: Tuesday 2019-07-16 10:36:51 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -54,19 +54,26 @@ class Home extends Component {
   //       resolve({ date: Date.now() });
   //     }, 300);
   //   });
-  //   console.log('handleClick 方法正常执行。并受到参数：', val, response.date)
+  //   console.log("handleClick 方法正常执行。并受到参数：", val, response.date);
 
   //   this.setState({
   //     date: response.date,
   //     target: e.target
-  //   })
-  // }
+  //   });
+  // };
 
   @track("UVPV")
   @track("TONP")
   componentDidMount = () => {
     this.initContent("test");
     this.getUserInfo();
+
+    setTimeout(() => {
+      console.log("修改 stateKey: content 方法正常执行");
+      this.setState({
+        content: { test: "test" }
+      });
+    }, 5000);
   };
 
   @track("async", 22120, { propKey: "userInfo" })
