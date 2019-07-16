@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Tuesday 2019-07-16 10:32:28 am
+ * Last Modified: Tuesday 2019-07-16 11:10:24 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -205,27 +205,41 @@ export function track(modifier, eventId, params = {}) {
           (this.tckQueue[watchStateKey] = [tck]) &&
           this.tckQueueStateKeys.push(watchStateKey);
 
+        const diffValDispatch = (prevProps, prevState) => {
+          Object.keys(this.tckQueue).forEach(watchKey => {
+            let oldVal, newVal, key;
+
+            key = watchKey.split("_")[1];
+            if (this.tckQueuePropKeys.includes(watchKey)) {
+              newVal = this.props[key];
+              oldVal = prevProps[key];
+            }
+            if (this.tckQueueStateKeys.includes(watchKey)) {
+              newVal = this.state[key];
+              oldVal = prevState[key];
+            }
+            if (oldVal !== newVal) {
+              this.tckQueue[watchKey].forEach(sub => sub && sub());
+              this.tckQueue[watchKey] = []; // 清空当前watch的埋点队列
+            }
+          });
+        };
         // 通过 react 生命周期函数 getSnapshotBeforeUpdate diff 值的变化控制埋点的上报
         if (isRC && !this.getSnapshotBeforeUpdate) {
+          this.needMergeSnapshotBeforeUpdate = false;
           this.getSnapshotBeforeUpdate = (prevProps, prevState) => {
-            Object.keys(this.tckQueue).forEach(watchKey => {
-              let oldVal, newVal, key;
-
-              key = watchKey.split("_")[1];
-              if (this.tckQueuePropKeys.includes(watchKey)) {
-                newVal = this.props[key];
-                oldVal = prevProps[key];
-              }
-              if (this.tckQueueStateKeys.includes(watchKey)) {
-                newVal = this.state[key];
-                oldVal = prevState[key];
-              }
-              if (oldVal !== newVal) {
-                this.tckQueue[watchKey].forEach(sub => sub && sub());
-                this.tckQueue[watchKey] = []; // 清空当前watch的埋点队列
-              }
-            });
+            diffValDispatch(prevProps, prevState);
             return null;
+          };
+        } else if (
+          this.getSnapshotBeforeUpdate &&
+          this.needMergeSnapshotBeforeUpdate !== false
+        ) {
+          const snapshotBeforeUpdate = this.getSnapshotBeforeUpdate;
+
+          this.getSnapshotBeforeUpdate = (prevProps, prevState) => {
+            diffValDispatch(prevProps, prevState);
+            return snapshotBeforeUpdate.call(this, prevProps, prevState);
           };
         } else if (!isRC && this.reaction) {
           const cbks = this.tckQueue[watchStateKey];

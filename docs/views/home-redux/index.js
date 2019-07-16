@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Tuesday 2019-07-16 10:36:51 am
+ * Last Modified: Tuesday 2019-07-16 11:07:38 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -68,13 +68,17 @@ class Home extends Component {
     this.initContent("test");
     this.getUserInfo();
 
-    setTimeout(() => {
+    this.timer = setTimeout(() => {
       console.log("修改 stateKey: content 方法正常执行");
       this.setState({
         content: { test: "test" }
       });
     }, 5000);
   };
+
+  componentWillUnmount() {
+    this.timer && clearTimeout(this.timer);
+  }
 
   @track("async", 22120, { propKey: "userInfo" })
   getUserInfo = () => {
