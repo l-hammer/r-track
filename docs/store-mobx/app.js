@@ -2,7 +2,7 @@
  * Created Date: 2019-07-13
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-07-15 16:57:44 pm
+ * Last Modified: Wednesday 2019-07-17 11:35:35 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -24,7 +24,7 @@ class App {
   @observable content = null;
 
   @action.bound
-  @track("click.after", 22121)
+  @track("trigger.after", 22121)
   handleClick(val, e) {
     console.log("handleClick 方法正常执行。并受到参数：", val, e.target);
     this.date = Date.now();
