@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Tuesday 2019-07-16 11:10:24 am
+ * Last Modified: Wednesday 2019-07-17 11:33:12 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -22,8 +22,8 @@ const ONCE = "once";
 const modifiers = {
   UVPV: "UVPV", // 特殊的修饰符
   TONP: "TONP", // 特殊的修饰符，表示页面停留时长
-  CLICK: "click",
-  CLICK_AFTER: "click.after",
+  TRIGGER: "trigger",
+  TRIGGER_AFTER: "trigger.after",
   ASYNC: "async",
   ASYNC_DELAY: "async.delay"
 };
@@ -107,14 +107,14 @@ export function track(modifier, eventId, params = {}) {
       };
     }
     // 事件行为埋点
-    else if (modifier.includes(modifiers.CLICK)) {
+    else if (modifier.includes(modifiers.TRIGGER)) {
       handler = function(...args) {
         let context = this;
         const isRC = this.isReactComponent; // 是否为 react 组件
         const evts = this.trackEvents || this.props.trackEvents;
         const once = modifier.includes(ONCE);
         const onceProp = `${name}_${eventId}`;
-        const after = modifier.includes(modifiers.CLICK_AFTER);
+        const after = modifier.includes(modifiers.TRIGGER_AFTER);
         const tck = () => {
           if (this[onceProp]) return; // 如果存在once修饰符，且为true则直接返回
           vaildEvent(evts, eventId); // 检测eventId是否合法

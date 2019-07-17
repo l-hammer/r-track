@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Tuesday 2019-07-16 11:07:38 am
+ * Last Modified: Wednesday 2019-07-17 11:34:06 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -37,7 +37,7 @@ class Home extends Component {
     };
   }
 
-  @track("click.after", 22121)
+  @track("trigger.after", 22121)
   handleClick(val, e) {
     console.log("handleClick 方法正常执行。并受到参数：", val, e.target);
     this.setState({
