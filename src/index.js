@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Tuesday 2019-07-23 14:43:56 pm
+ * Last Modified: Wednesday 2019-07-24 11:10:36 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -11,7 +11,7 @@
  */
 import { isVisible } from "./utils/dom";
 import { zipObject, clearTimeoutQueue } from "./utils/helper";
-import { vaildEvent, vaildWatchKey, vaildRC } from "./utils/error";
+import { vaildEvent, vaildRC } from "./utils/error";
 
 const ONCE = "once";
 const modifiers = {
@@ -210,130 +210,6 @@ export function track(modifier, eventId, params = {}) {
           // 同步
           return queue.forEach(sub => sub(...args));
         }
-      };
-    }
-    // 异步监听行为埋点
-    else {
-      handler = function(...args) {
-        let tck;
-        let context = this;
-        const isRC = checkRC(this); // 是否为 react 组件
-        const evts = getTrackEvents(this);
-        const fn = valueAdapter(this, value, initializer, args);
-        const once = modifier.includes(ONCE);
-        const { stateKey, propKey } = params;
-        const watchPropKey = `${name}_${propKey}_${eventId}`; // 保证key的唯一性
-        const watchStateKey = `${name}_${stateKey}_${eventId}`;
-
-        vaildEvent(evts, eventId);
-        vaildWatchKey(stateKey, propKey);
-
-        !this.tckQueue && (this.tckQueue = {}); // 在当前实例维护一个异步埋点队列
-        !this.tckQueuePropKeys && (this.tckQueuePropKeys = []); //
-        !this.tckQueueStateKeys && (this.tckQueueStateKeys = []); //
-
-        if (
-          modifier === modifiers.ASYNC_DELAY ||
-          modifier === modifiers.ASYNC_DELAY + ".once"
-        ) {
-          !this.tckTimerQueue && (this.tckTimerQueue = {}); // 定时器队列
-          tck = () => {
-            const { delay = 0, ref } = params;
-            const ele = this[ref] || document;
-            const timer = this.tckTimerQueue[eventId];
-
-            timer && clearTimeout(timer);
-            this.tckTimerQueue[eventId] = setTimeout(() => {
-              isRC && (context = { ...this.state, ...this.props });
-              isVisible(ele) && evts[eventId].call(null, context, ...args);
-              clearTimeout(this.tckTimerQueue[eventId]);
-            }, delay);
-          };
-
-          // 页面卸载时清除进行中的定时器
-          if (isRC && !this.componentWillUnmount) {
-            this.needMergeWillUnmount = false;
-            this.componentWillUnmount = () => {
-              clearTimeoutQueue(this.tckTimerQueue);
-            };
-          } else if (
-            this.componentWillUnmount &&
-            this.needMergeWillUnmount !== false
-          ) {
-            const willUnmountRef = this.componentWillUnmount;
-            this.componentWillUnmount = () => {
-              willUnmountRef.apply(this);
-              clearTimeoutQueue(this.tckTimerQueue);
-            };
-          }
-        } else if (
-          modifier === modifiers.ASYNC ||
-          modifier === modifiers.ASYNC + ".once"
-        ) {
-          tck = () => {
-            isRC && (context = { ...this.state, ...this.props });
-            if (propKey && this[`${watchPropKey}_${ONCE}`]) return;
-            if (stateKey && this[`${watchStateKey}_${ONCE}`]) return;
-            evts[eventId].call(null, context, ...args);
-            once && propKey && (this[`${watchPropKey}_${ONCE}`] = true);
-            once && stateKey && (this[`${watchStateKey}_${ONCE}`] = true);
-          };
-        }
-
-        propKey &&
-          (this.tckQueue[watchPropKey] = [tck]) &&
-          this.tckQueuePropKeys.push(watchPropKey);
-        stateKey &&
-          (this.tckQueue[watchStateKey] = [tck]) &&
-          this.tckQueueStateKeys.push(watchStateKey);
-
-        const diffValDispatch = (prevProps, prevState) => {
-          Object.keys(this.tckQueue).forEach(watchKey => {
-            let oldVal, newVal, key;
-
-            key = watchKey.split("_")[1];
-            if (this.tckQueuePropKeys.includes(watchKey)) {
-              newVal = this.props[key];
-              oldVal = prevProps[key];
-            }
-            if (this.tckQueueStateKeys.includes(watchKey)) {
-              newVal = this.state[key];
-              oldVal = prevState[key];
-            }
-            if (oldVal !== newVal) {
-              this.tckQueue[watchKey].forEach(sub => sub && sub());
-              this.tckQueue[watchKey] = []; // 清空当前watch的埋点队列
-            }
-          });
-        };
-        // 通过 react 生命周期函数 getSnapshotBeforeUpdate diff 值的变化控制埋点的上报
-        if (isRC && !this.getSnapshotBeforeUpdate) {
-          this.needMergeSnapshotBeforeUpdate = false;
-          this.getSnapshotBeforeUpdate = (prevProps, prevState) => {
-            diffValDispatch(prevProps, prevState);
-            return null;
-          };
-        } else if (
-          this.getSnapshotBeforeUpdate &&
-          this.needMergeSnapshotBeforeUpdate !== false
-        ) {
-          const snapshotBeforeUpdate = this.getSnapshotBeforeUpdate;
-
-          this.getSnapshotBeforeUpdate = (prevProps, prevState) => {
-            diffValDispatch(prevProps, prevState);
-            return snapshotBeforeUpdate.call(this, prevProps, prevState);
-          };
-        } else if (!isRC && this.reaction) {
-          const cbks = this.tckQueue[watchStateKey];
-          const disposer = this.reaction(
-            () => this[stateKey],
-            () => {
-              cbks.forEach(sub => sub && sub());
-              disposer();
-            }
-          );
-        }
-        return fn(...args);
       };
     }
 
