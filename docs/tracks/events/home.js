@@ -2,7 +2,7 @@
  * Created Date: 2019-06-19
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 21:29:25 pm
+ * Last Modified: Monday 2019-08-12 00:03:36 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -39,6 +39,11 @@ export default {
   22122(context, val) {
     trackAction("22122", {
       content: context.content,
+      param: val
+    });
+  },
+  22123(_, val) {
+    trackAction("22123", {
       param: val
     });
   }

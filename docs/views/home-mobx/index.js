@@ -2,14 +2,14 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-07-15 14:23:54 pm
+ * Last Modified: Monday 2019-08-12 00:56:53 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
  * ------
  * Javascript will save your soul!
  */
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Provider, inject, observer } from "mobx-react";
 import { withRouter } from "react-router";
 import store from "@/store-mobx";
@@ -17,11 +17,11 @@ import { home as trackEvents } from "@/tracks";
 import { track } from "../../../";
 
 @withRouter
-@observer
 @inject(({ app }) => ({
   app,
   trackEvents
 }))
+@observer
 class Detail extends Component {
   constructor(props) {
     super(props);
@@ -35,16 +35,23 @@ class Detail extends Component {
     this.props.app.fetchUserInfo();
   }
 
+  @track("show")
   render() {
-    const { handleClick } = this.props.app;
+    const { handleClick, date } = this.props.app;
 
     return (
-      <button
-        ref={ref => (this.buttonRef = ref)}
-        onClick={e => handleClick("123", e)}
-      >
-        Click Mee
-      </button>
+      <Fragment>
+        <div style={{ height: "1500px" }}></div>
+        <button
+          data-track-event="22123"
+          data-track-params={`${date}`}
+          ref={ref => (this.buttonRef = ref)}
+          onClick={e => handleClick("123", e)}
+        >
+          Click Mee
+        </button>
+        <p style={{ height: "1500px" }}>tmsp: {date}</p>
+      </Fragment>
     );
   }
 }
