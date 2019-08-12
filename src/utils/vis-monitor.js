@@ -2,7 +2,7 @@
  * Created Date: 2019-08-11
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-08-12 00:53:56 am
+ * Last Modified: Monday 2019-08-12 17:32:20 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -27,7 +27,7 @@ export default class VisMonitor {
     this.ref = ref;
     this.refWin = refwin;
     this.started = false;
-    this.prevPerc = null; // 前一次百分比
+    this.prevPerc = null; // 保存前一次曝光百分比
     this.listeners = {};
     this.removeScrollLisener = null;
     this.init();
@@ -144,8 +144,8 @@ export default class VisMonitor {
 
     if (this.prevPerc !== 1 && perc === 1) {
       this.$emit("fullyvisible");
+      this.prevPerc = perc;
     }
-    this.prevPerc = perc;
   }
 
   /**

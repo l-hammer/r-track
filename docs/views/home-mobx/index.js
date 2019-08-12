@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-08-12 00:56:53 am
+ * Last Modified: Monday 2019-08-12 21:35:28 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -25,7 +25,7 @@ import { track } from "../../../";
 class Detail extends Component {
   constructor(props) {
     super(props);
-    this.buttonRef = null;
+    this.buttonTrackRef = null;
   }
 
   @track("UVPV")
@@ -45,7 +45,7 @@ class Detail extends Component {
         <button
           data-track-event="22123"
           data-track-params={`${date}`}
-          ref={ref => (this.buttonRef = ref)}
+          ref={ref => (this.buttonTrackRef = ref)}
           onClick={e => handleClick("123", e)}
         >
           Click Mee

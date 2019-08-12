@@ -2,7 +2,7 @@
  * Created Date: 2019-07-11
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-08-11 18:54:33 pm
+ * Last Modified: Monday 2019-08-12 21:30:01 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -26,6 +26,16 @@ export function zipObject(value) {
  * @return {Boolean}
  */
 export const isFun = v => typeof v === "function" || false;
+
+/**
+ * @desc 判断给定变量是否为一个对象
+ *
+ * @param {*} v
+ * @return {Boolean}
+ */
+export const isObject = val => {
+  return val !== null && typeof val === "object";
+};
 
 /**
  * @desc 清除定时器

@@ -2,15 +2,15 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-08-12 21:44:48 pm
+ * Last Modified: Monday 2019-08-12 21:46:20 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
  * ------
  * Javascript will save your soul!
  */
-import { isVisible } from "./utils/dom";
-import { zipObject, clearTimeoutQueue } from "./utils/helper";
+import { isElement, isVisible } from "./utils/dom";
+import { isObject, zipObject, clearTimeoutQueue } from "./utils/helper";
 import { vaildEvent, vaildRC } from "./utils/error";
 import VisMonitor from "./utils/vis-monitor";
 
@@ -119,11 +119,11 @@ export function track(modifier, eventId, params = {}) {
         this.__trackPageEntryTime = Date.now();
         // 页面卸载前上报埋点
         if (isRC && !this.componentWillUnmount) {
-          this.needMergeTONPWillUnmount = false;
+          this.$needMergeTONPWillUnmount = false;
           this.componentWillUnmount = () => tck();
         } else if (
           this.componentWillUnmount &&
-          this.needMergeTONPWillUnmount !== false
+          this.$needMergeTONPWillUnmount !== false
         ) {
           const willUnmountRef = this.componentWillUnmount;
 
@@ -151,17 +151,20 @@ export function track(modifier, eventId, params = {}) {
         }
         // 绑定滚动监听器
         function visMonitor() {
-          this.$trackRefs.forEach(ref => {
-            if (!ref.$visMonitor) {
-              const vm = new VisMonitor(ref);
-              const { trackOnce, trackEvent, trackParams } = ref.dataset;
+          const props = Object.keys(this).filter(k => isObject(this[k]));
+
+          props.forEach(prop => {
+            const ele = this[prop].current || this[prop];
+            if (/TrackRef$/.test(prop) && isElement(ele) && !ele.$visMonitor) {
+              const vm = new VisMonitor(ele);
+              const { trackOnce, trackEvent, trackParams } = ele.dataset;
 
               (trackOnce ? vm.$once : vm.$on).call(
                 vm,
                 "fullyvisible",
                 tck.bind(this, trackEvent, trackParams)
               );
-              ref.$visMonitor = vm;
+              ele.$visMonitor = vm;
             }
           });
         }
@@ -173,28 +176,21 @@ export function track(modifier, eventId, params = {}) {
           this.componentDidMount = () => {
             didMountRef && didMountRef.apply(this);
             this.$isMounted = true; // 编辑是否已经挂载
-            this.$trackRefs = Object.keys(this).reduce((refs, prop) => {
-              if (/Ref$/.test(prop)) {
-                refs.push(this[prop].current || this[prop]);
-              }
-              return refs;
-            }, []);
             visMonitor.apply(this);
           };
         }
         // DOM update 更新滚动监听器
         if (isRC && !this.componentDidUpdate) {
-          this.needMergeSHOWDidMount = false;
+          this.$needMergeSHOWDidUpdate = false;
           this.componentDidUpdate = () => visMonitor.apply(this);
         } else if (
-          isRC &&
           this.componentDidUpdate &&
-          this.needMergeSHOWDidMount !== false
+          this.$needMergeSHOWDidUpdate !== false
         ) {
-          const didMountRef = this.componentDidUpdate;
-
+          this.$didUpdateHookRef =
+            this.$didUpdateHookRef || this.componentDidUpdate;
           this.componentDidUpdate = () => {
-            didMountRef.apply(this);
+            this.$didUpdateHookRef.apply(this);
             visMonitor.apply(this);
           };
         }
@@ -246,13 +242,13 @@ export function track(modifier, eventId, params = {}) {
 
           // 页面卸载时清除进行中的定时器
           if (isRC && !this.componentWillUnmount) {
-            this.needMergeWillUnmount = false;
+            this.$needMergeWillUnmount = false;
             this.componentWillUnmount = () => {
               clearTimeoutQueue(this.tckTimerQueue);
             };
           } else if (
             this.componentWillUnmount &&
-            this.needMergeWillUnmount !== false
+            this.$needMergeWillUnmount !== false
           ) {
             const willUnmountRef = this.componentWillUnmount;
             this.componentWillUnmount = () => {
