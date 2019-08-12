@@ -2,7 +2,7 @@
  * Created Date: 2019-07-13
  * Author: 宋慧武
  * ------
- * Last Modified: Wednesday 2019-07-24 11:08:32 am
+ * Last Modified: Monday 2019-08-12 21:43:57 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -19,7 +19,7 @@ import { track, inject } from "../../";
 })
 class App {
   @observable userInfo = {};
-  @observable date = null;
+  @observable date = Date.now();
   @observable target = null;
   @observable content = null;
 
