@@ -2,7 +2,7 @@
  * Created Date: 2019-07-13
  * Author: 宋慧武
  * ------
- * Last Modified: Wednesday 2019-07-17 11:35:35 am
+ * Last Modified: Wednesday 2019-07-24 11:08:32 am
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -31,7 +31,6 @@ class App {
     this.target = e.target;
   }
   // @action.bound
-  // @track("async", 22121, { stateKey: "date" })
   // handleClick = async (val, e) => {
   //   e.persist();
   //   const response = await new Promise(resolve => {
@@ -48,7 +47,7 @@ class App {
   // }
 
   @action
-  @track("async", 22120, { stateKey: "userInfo" })
+  @track("async", 22120)
   fetchUserInfo = async () => {
     const rest = await new Promise(resolve => {
       setTimeout(() => {
@@ -63,7 +62,7 @@ class App {
   };
 
   @action
-  @track("async.delay", 22122, { delay: 3000, stateKey: "content" })
+  @track("async.delay", 22122, { delay: 3000 })
   initContent = async val => {
     const response = await new Promise(resolve => {
       setTimeout(() => {
