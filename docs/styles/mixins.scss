@@ -1,0 +1,229 @@
+/*
+ * Created Date: 2019-06-02
+ * Author: 宋慧武
+ * ------
+ * Last Modified: Monday 2019-08-19 12:17:56 pm
+ * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
+ * ------
+ * HISTORY:
+ */
+$M_E: 'null';
+
+@mixin block($block) {
+  $B: $block !global;
+  .#{$block} {
+    $rootblock: & !global;
+    @content;
+  }
+}
+
+@mixin e($element, $base: 'root') {
+  $E: $element !global;
+  @if $M_E != 'null' {
+    @if $M_E == $rootblock {
+      & .#{$element} {
+        @content;
+      }
+    } @else {
+      & #{$M_E}__#{$element} {
+        $M_E: 'null' !global; // 清空当前修饰的元素
+        @content;
+      }
+    }
+  } @else if $base != 'root' {
+    @at-root .#{$base}__#{$element} {
+      @content;
+    }
+  } @else if & == $rootblock {
+    & .#{$element} {
+      @content;
+    }
+  } @else if $base == 'root' {
+    &__#{$element} {
+      @content;
+    }
+  }
+}
+
+@mixin m($modifier, $nexted: 'false') {
+  @if $nexted == 'true' {
+    $M_E: & !global;
+  }
+  &--#{$modifier} {
+    @content;
+  }
+}
+
+@mixin global($name) {
+  $cls: global-#{$name};
+  @at-root .#{$cls} {
+    @content;
+  }
+}
+
+@mixin icon($w, $h, $bg, $type: 'png') {
+  width: #{$w}px;
+  height: #{$h}px;
+  background: none no-repeat center / 100%;
+  @if $type == 'svg' {
+    background-image: url('#{$bg}.svg');
+  } @else {
+    background-image: url('#{$bg}@2x.png');
+    @media (min-resolution: 3dppx) {
+      background-image: url('#{$bg}@3x.png');
+    }
+  }
+}
+
+@mixin one-pix-line($pos: 'bottom', $color: $--border-color, $style: solid) {
+  $prop: border-#{$pos};
+  @if $pos == 'all' {
+    $prop: border;
+  }
+  #{$prop}: 1px $style $color;
+  @media (min-resolution: 2dppx) {
+    #{$prop}: .5px $style $color;
+  }
+  @media (min-resolution: 3dppx) {
+    #{$prop}: .333333px $style $color;
+  }
+  @media (min-resolution: 4dppx) {
+    #{$prop}: .25px $style $color;
+  }
+}
+
+@mixin element-a {
+  display: inline-block;
+  outline: none;
+  line-height: $--font-line-height-base;
+  text-decoration: none;
+  color: $--color-text;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    color: $--color-primary;
+  }
+}
+
+@mixin text-ellipsis($width: 100%) {
+  width: $width;
+  overflow: hidden;
+  white-space: nowrap;
+  word-wrap: normal;
+  text-overflow: ellipsis;
+}
+
+@mixin text-wrap() {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+@mixin position--t--r($p: absolute, $t: 0, $r: 0) {
+  position: $p;
+  top: $t;
+  right: $r;
+  @content;
+}
+
+@mixin position--t--b($p: absolute, $t: 0, $b: 0) {
+  position: $p;
+  top: $t;
+  bottom: $b;
+  @content;
+}
+
+@mixin position--t--l($p: absolute, $t: 0, $l: 0) {
+  position: $p;
+  top: $t;
+  left: $l;
+  @content;
+}
+
+@mixin position--b--r($p: absolute, $b: 0, $r: 0) {
+  position: $p;
+  right: $r;
+  bottom: $b;
+  @content;
+}
+
+@mixin position--b--l($p: absolute, $b: 0, $l: 0) {
+  position: $p;
+  bottom: $b;
+  left: $l;
+  @content;
+}
+
+@mixin position--r--l($p: absolute, $r: 0, $l: 0) {
+  position: $p;
+  right: $r;
+  left: $l;
+  @content;
+}
+
+@mixin position--overlay($p: absolute, $v: 0) {
+  position: $p;
+  top: $v;
+  right: $v;
+  bottom: $v;
+  left: $v;
+}
+
+@mixin position--overlay--y($p: absolute) {
+  position: $p;
+  top: 0;
+  bottom: 0;
+}
+
+@mixin center--x() {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  @content;
+}
+
+@mixin center--y() {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  @content;
+}
+
+@mixin flex-box {
+  display: flex;
+  & > * {
+    flex: 0 0 auto;
+  }
+}
+
+@mixin h-box {
+  @include flex-box;
+  flex-direction: row;
+  @content;
+}
+
+@mixin v-box {
+  @include flex-box;
+  flex-direction: column;
+  @content;
+}
+
+@mixin box-center {
+  @include flex-box;
+  align-items: center;
+  justify-content: center;
+  @content;
+}
+
+@mixin box-between {
+  @include flex-box;
+  align-items: center;
+  justify-content: space-between;
+  @content;
+}
+
+@mixin circle($w, $color) {
+  width: $w;
+  height: $w;
+  border-radius: 50%;
+  background: $color;
+}

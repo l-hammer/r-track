@@ -1,0 +1,75 @@
+/*
+ * Created Date: 2019-06-02
+ * Author: 宋慧武
+ * ------
+ * Last Modified: Wednesday 2019-08-14 11:29:08 am
+ * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
+ * ------
+ * HISTORY:
+ */
+/* Font size 公用类
+---------------------------- */
+@include block(ft) {
+  &\:12 {
+    font-size: $--font-size-small !important;
+  }
+  &\:13 {
+    font-size: #{$--font-size-base - 1px} !important;
+  }
+  &\:14 {
+    font-size: $--font-size-base !important;
+  }
+  &\:15 {
+    font-size: #{$--font-size-base + 1px} !important;
+  }
+  &\:16 {
+    font-size: $--font-size-medium !important;
+  }
+  &\:17 {
+    font-size: #{$--font-size-base + 3px} !important;
+  }
+  &\:18 {
+    font-size: $--font-size-large !important;
+  }
+  &\:20 {
+    font-size: #{$--font-size-large + 2px} !important;
+  }
+  &\:22 {
+    font-size: #{$--font-size-large + 4px} !important;
+  }
+}
+
+/* 主题色公用类
+---------------------------- */
+@include block(primary) {
+  color: $--color-primary !important;
+  &\:hover {
+    color: $--color-primary !important;
+  }
+}
+
+/* 相对定位公用类
+---------------------------- */
+@include global(relative) {
+  position: relative;
+}
+
+/* 元素全屏公用类
+---------------------------- */
+@include global(overlay) {
+  @include position--overlay;
+}
+
+/* 顺时针旋转度数公用类
+---------------------------- */
+@include global(rotate) {
+  &\:180 {
+    transform: rotate(.5turn);
+  }
+}
+
+/* touch背景提示公用类
+---------------------------- */
+@include global(touch\:active) {
+  background: rgba(0, 0, 0, 0.02);
+}
