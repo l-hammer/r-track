@@ -2,15 +2,19 @@
  * Created Date: 2019-06-19
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 17:44:56 pm
+ * Last Modified: Wednesday 2019-08-21 21:20:50 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
  * ------
  * Javascript will save your soul!
  */
+import React from "react";
+import { notification } from "antd";
 import { format } from "@/utils/date";
 import $log from "@/utils/logger";
+import Table from "@/components/table";
+
 /**
  * 埋点Action
  *
@@ -29,4 +33,8 @@ export default function trackAction(evt, addtional = {}) {
   };
 
   $log(data);
+  notification.success({
+    message: "上报数据如下：",
+    description: <Table data={data}></Table>
+  });
 }

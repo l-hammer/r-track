@@ -2,7 +2,7 @@
  * Created Date: 2019-06-18
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-08-19 19:09:32 pm
+ * Last Modified: Wednesday 2019-08-21 21:17:31 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -116,5 +116,30 @@ header {
     // color: $md-grey-400;
     padding: 4px 4px 6px 6px;
     border-radius: 0 0 0 2px;
+  }
+}
+
+.r-track-table {
+  font-size: 12px;
+  .header,
+  .row {
+    display: flex;
+    border-bottom: 1px solid #ebeef5;
+    strong,
+    span {
+      // flex: 1;
+      line-height: 29px;
+      // border-bottom: 1px solid #ebeef5;
+    }
+    .key {
+      width: 92px;
+    }
+    .val {
+      flex: 1;
+    }
+  }
+  .row:hover {
+    background: #fafafa;
+    cursor: pointer;
   }
 }

@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-08-19 15:18:08 pm
+ * Last Modified: Wednesday 2019-08-21 22:24:59 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -13,6 +13,7 @@ import React from "react";
 import { Prompt } from "react-router";
 import { HashRouter, Route, Link } from "react-router-dom";
 import Started from "@/views/started";
+import Trigger from "@/views/trigger";
 import HomeRedux from "@/views/home-redux";
 import HomeMobx from "@/views/home-mobx";
 
@@ -24,6 +25,10 @@ const routes = [
   {
     path: "/home-redux",
     component: HomeRedux
+  },
+  {
+    path: "/trigger",
+    component: Trigger
   },
   {
     path: "/home-mobx",
@@ -92,10 +97,12 @@ export default () => {
           <Link className="link" to="/">
             快速开始
           </Link>
-          <Link className="link" to="/home-redux">
+          <Link className="link" to="/trigger">
             事件行为埋点
           </Link>
-          {/* < className="link"Link to="/">页面行为埋点</Link> */}
+          <Link className="link" to="/">
+            页面行为埋点
+          </Link>
           <Link className="link" to="/home-mobx">
             区域展现埋点
           </Link>
@@ -104,8 +111,6 @@ export default () => {
           </a>
         </header>
         <Prompt message={() => true}></Prompt>
-        {/* <Link to="/home-redux">Home redux page</Link>
-        <Link to="/home-mobx">Home mobx page</Link> */}
         {routes.map((route, i) => (
           <RouteWithSubRoutes key={i} {...route} />
         ))}
