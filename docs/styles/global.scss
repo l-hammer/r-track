@@ -2,7 +2,7 @@
  * Created Date: 2019-06-18
  * Author: 宋慧武
  * ------
- * Last Modified: Wednesday 2019-08-21 21:17:31 pm
+ * Last Modified: Thursday 2019-08-22 16:49:55 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -75,6 +75,20 @@ header {
   text-align: center;
 }
 
+.r-track {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+  .ant-btn {
+    display: block;
+    width: 229px;
+    margin: 32px auto 52px;
+  }
+  .description {
+    padding: 20px 0;
+  }
+}
+
 .started_page {
   max-width: 1200px;
   padding: 20px;
@@ -95,13 +109,10 @@ header {
   position: relative;
   .line-numbers,
   .render {
-    // color: #d8dee9;
     padding: 20px;
     padding-right: 0;
   }
   .line-numbers {
-    // background: #2e3440;
-    // color: $md-grey-400;
     border-radius: 2px 0 0 2px;
     line-height: 18px;
   }
@@ -113,7 +124,6 @@ header {
     position: absolute;
     top: 0;
     right: 0;
-    // color: $md-grey-400;
     padding: 4px 4px 6px 6px;
     border-radius: 0 0 0 2px;
   }
@@ -127,9 +137,7 @@ header {
     border-bottom: 1px solid #ebeef5;
     strong,
     span {
-      // flex: 1;
       line-height: 29px;
-      // border-bottom: 1px solid #ebeef5;
     }
     .key {
       width: 92px;
@@ -142,4 +150,10 @@ header {
     background: #fafafa;
     cursor: pointer;
   }
+}
+
+.block_show__card {
+  width: 399px;
+  text-align: center;
+  margin: 32px auto 52px;
 }

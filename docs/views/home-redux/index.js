@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Wednesday 2019-08-21 20:21:40 pm
+ * Last Modified: Thursday 2019-08-22 16:49:55 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -17,8 +17,6 @@ import store from "@/store";
 import { home as trackEvents } from "@/tracks";
 import { fetchUserInfo } from "@/store/actions";
 import { track, inject } from "../../../";
-
-import "./index.scss";
 
 function mapStateToProps(state) {
   return {
@@ -116,7 +114,7 @@ class Home extends Component {
       // >
       //   Click Me
       // </button>
-      <div className="trigger-track">
+      <div className="r-track">
         <Button
           type="primary"
           ref={ref => (this.buttonRef = ref)}

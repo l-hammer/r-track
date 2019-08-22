@@ -2,7 +2,7 @@
  * Created Date: 2019-08-19
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-08-19 19:41:27 pm
+ * Last Modified: Thursday 2019-08-22 13:54:59 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -62,15 +62,13 @@ export default class Started extends Component {
     return (
       <Fragment>
         <p>
-          1、@track("UVPV")、@track("TONP")应该装饰componentDidMount，因为需要在页面挂载完成后上报对应的埋点
+          1、ref
+          参数为DOM的引用，可控制在小于埋点延迟时间内发生DOM隐藏是否继续上报埋点；
         </p>
+        <p>2、delay 参数为埋点延迟上报的时间；</p>
         <p>
-          2、ref
-          参数为DOM的引用，可控制在小于埋点延迟时间内发生DOM隐藏是否继续上报埋点
-        </p>
-        <p>
-          3、async.delay 埋点应该装饰 class component 的方法。因为 mobx class
-          没有生命周期，我们无法在页面销毁的时候及时清除定时器
+          3、async.delay 类型的埋点暂不支持 once
+          修饰符，因为目前还没有适用的场景。
         </p>
       </Fragment>
     );

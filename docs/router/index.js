@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Wednesday 2019-08-21 22:24:59 pm
+ * Last Modified: Thursday 2019-08-22 16:51:31 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -14,8 +14,8 @@ import { Prompt } from "react-router";
 import { HashRouter, Route, Link } from "react-router-dom";
 import Started from "@/views/started";
 import Trigger from "@/views/trigger";
-import HomeRedux from "@/views/home-redux";
-import HomeMobx from "@/views/home-mobx";
+import PageInit from "@/views/page-init";
+import BlockShow from "@/views/block-show";
 
 const routes = [
   {
@@ -23,16 +23,16 @@ const routes = [
     component: Started
   },
   {
-    path: "/home-redux",
-    component: HomeRedux
-  },
-  {
     path: "/trigger",
     component: Trigger
   },
   {
-    path: "/home-mobx",
-    component: HomeMobx
+    path: "/page-init",
+    component: PageInit
+  },
+  {
+    path: "/block-show",
+    component: BlockShow
   }
 ];
 
@@ -100,10 +100,10 @@ export default () => {
           <Link className="link" to="/trigger">
             事件行为埋点
           </Link>
-          <Link className="link" to="/">
+          <Link className="link" to="/page-init">
             页面行为埋点
           </Link>
-          <Link className="link" to="/home-mobx">
+          <Link className="link" to="/block-show">
             区域展现埋点
           </Link>
           <a className="link" href="https://github.com/l-hammer/r-track/issues">

@@ -2,7 +2,7 @@
  * Created Date: 2019-08-21
  * Author: 宋慧武
  * ------
- * Last Modified: Wednesday 2019-08-21 22:17:01 pm
+ * Last Modified: Thursday 2019-08-22 16:49:55 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -208,9 +208,9 @@ class Trigger extends Component {
 
   render() {
     return (
-      <div className="trigger-track">
+      <div className="r-track">
         <p className="description">
-          假如我们需要在点击button时上报id为22121的埋点，示例如下：
+          如果我们需要在点击button时上报id为22121的埋点，示例如下：
         </p>
         <Button
           type="primary"
