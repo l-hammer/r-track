@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Sunday 2019-07-14 17:43:32 pm
+ * Last Modified: Wednesday 2019-08-21 21:39:38 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -14,11 +14,11 @@ import { format } from "./date";
 const logger = console;
 const message = () => format(Date.now());
 
-const $log = rest => {
+const $log = (...rest) => {
   logger.log(
     `%c ${message()} r-track`,
     "color: #03A9F4; font-weight: bold",
-    rest
+    ...rest
   );
 };
 

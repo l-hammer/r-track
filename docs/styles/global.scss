@@ -1,0 +1,159 @@
+/*
+ * Created Date: 2019-06-18
+ * Author: 宋慧武
+ * ------
+ * Last Modified: Thursday 2019-08-22 16:49:55 pm
+ * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
+ * ------
+ * HISTORY:
+ */
+@import "./reset/index";
+@import "./common";
+@import "./animation";
+
+header {
+  background: $--color-dark;
+  padding: 32px;
+  text-align: center;
+  .title {
+    color: $--color-primary;
+    padding-bottom: 12px;
+  }
+  .description {
+    color: white;
+    margin-top: 16px;
+  }
+  .badge + .badge {
+    margin-left: 5px;
+  }
+  .link {
+    display: inline-block;
+    padding: 9px 16px;
+    color: #fff;
+    background: lighten($--color-dark, 10%);
+    border-radius: 3px;
+    margin-top: 32px;
+    &:hover {
+      background: lighten($--color-dark, 20%);
+    }
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
+  }
+}
+
+.global-title {
+  margin: 20px 0 20px 0;
+}
+
+.global-pdtb {
+  &\:12 {
+    margin: 12px 0;
+  }
+}
+
+.footer {
+  font-size: 14px;
+  text-align: center;
+  color: white;
+  background: lighten($--color-dark, 45%);
+  &-content {
+    margin: 0 42px;
+    padding: 16px 0;
+  }
+}
+
+.command {
+  background: darken($--color-dark, 10%);
+  color: white;
+  font-family: monospace;
+  max-width: 500px;
+  margin: 20px auto;
+  border-radius: 2px;
+  padding: 12px 24px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.r-track {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+  .ant-btn {
+    display: block;
+    width: 229px;
+    margin: 32px auto 52px;
+  }
+  .description {
+    padding: 20px 0;
+  }
+}
+
+.started_page {
+  max-width: 1200px;
+  padding: 20px;
+  margin: auto;
+}
+
+.start_alert {
+  margin-top: 20px;
+}
+
+.code-snippet {
+  @include h-box;
+  background: #F6F6F6;
+  border-radius: 3px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 10pt;
+  overflow: auto;
+  position: relative;
+  .line-numbers,
+  .render {
+    padding: 20px;
+    padding-right: 0;
+  }
+  .line-numbers {
+    border-radius: 2px 0 0 2px;
+    line-height: 18px;
+  }
+  .render {
+    white-space: pre;
+    line-height: 18px;
+  }
+  .language {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 4px 4px 6px 6px;
+    border-radius: 0 0 0 2px;
+  }
+}
+
+.r-track-table {
+  font-size: 12px;
+  .header,
+  .row {
+    display: flex;
+    border-bottom: 1px solid #ebeef5;
+    strong,
+    span {
+      line-height: 29px;
+    }
+    .key {
+      width: 92px;
+    }
+    .val {
+      flex: 1;
+    }
+  }
+  .row:hover {
+    background: #fafafa;
+    cursor: pointer;
+  }
+}
+
+.block_show__card {
+  width: 399px;
+  text-align: center;
+  margin: 32px auto 52px;
+}

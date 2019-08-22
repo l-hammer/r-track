@@ -2,7 +2,7 @@
  * Created Date: 2019-07-14
  * Author: 宋慧武
  * ------
- * Last Modified: Wednesday 2019-07-24 11:09:33 am
+ * Last Modified: Thursday 2019-08-22 16:49:55 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -11,6 +11,7 @@
  */
 import React, { Component } from "react";
 import { Provider, connect } from "react-redux";
+import { Button } from "antd";
 import { withRouter } from "react-router";
 import store from "@/store";
 import { home as trackEvents } from "@/tracks";
@@ -107,12 +108,21 @@ class Home extends Component {
 
   render() {
     return (
-      <button
-        ref={ref => (this.buttonRef = ref)}
-        onClick={this.handleClick.bind(this, "123")}
-      >
-        Click Me
-      </button>
+      // <button
+      //   ref={ref => (this.buttonRef = ref)}
+      //   onClick={this.handleClick.bind(this, "123")}
+      // >
+      //   Click Me
+      // </button>
+      <div className="r-track">
+        <Button
+          type="primary"
+          ref={ref => (this.buttonRef = ref)}
+          onClick={this.handleClick.bind(this, "123")}
+        >
+          Click Me
+        </Button>
+      </div>
     );
   }
 }

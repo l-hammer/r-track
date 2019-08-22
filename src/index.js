@@ -2,13 +2,14 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-08-12 21:46:20 pm
+ * Last Modified: Thursday 2019-08-22 16:23:39 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
  * ------
  * Javascript will save your soul!
  */
+import ReactDOM from "react-dom";
 import { isElement, isVisible } from "./utils/dom";
 import { isObject, zipObject, clearTimeoutQueue } from "./utils/helper";
 import { vaildEvent, vaildRC } from "./utils/error";
@@ -154,8 +155,15 @@ export function track(modifier, eventId, params = {}) {
           const props = Object.keys(this).filter(k => isObject(this[k]));
 
           props.forEach(prop => {
-            const ele = this[prop].current || this[prop];
-            if (/TrackRef$/.test(prop) && isElement(ele) && !ele.$visMonitor) {
+            let ele = this[prop].current || this[prop];
+
+            if (
+              /TrackRef$/.test(prop) &&
+              (isElement(ele) || ele.isReactComponent) &&
+              !ele.$visMonitor
+            ) {
+              ele = ele.isReactComponent && ReactDOM.findDOMNode(ele);
+
               const vm = new VisMonitor(ele);
               const { trackOnce, trackEvent, trackParams } = ele.dataset;
 
