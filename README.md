@@ -185,26 +185,24 @@ class Home extends Component {
 ```js
 @inject({ trackEvents })
 class Home extends Component {
-  ...
+  constructor(props) {
+    super(props);
+    this.cardTrackRef = null;
+  }
+
   @track("show")
   render() {
-    const { handleClick, date } = this.props.app;
-
     return (
-      <Fragment>
-        <div style={{ height: "1500px" }}></div>
-        <button
-          data-track-event="22123"
-          data-track-params={`${date}`}
-          ref={ref => (this.buttonTrackRef = ref)}
-        >
-          Click Mee
-        </button>
-        <p style={{ height: "1500px" }}>tmsp: {date}</p>
-      </Fragment>
+      <Card
+        data-track-event="22123"
+        data-track-params={Date.now()}
+        ref={ref => (this.cardTrackRef = ref)}
+        className="block_show__card"
+      >
+        <p>我想被曝光</p>
+      </Card>
     );
   }
-  ...
 }
 ```
 
