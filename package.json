@@ -1,6 +1,6 @@
 {
   "name": "r-track",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "一个基于装饰器的埋点业务插件",
   "author": "LHammer <lhammer@qq.com>",
   "scripts": {
