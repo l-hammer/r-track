@@ -2,7 +2,7 @@
  * Created Date: 2019-08-22
  * Author: 宋慧武
  * ------
- * Last Modified: Thursday 2019-08-22 16:49:55 pm
+ * Last Modified: Friday 2019-08-23 16:03:48 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -19,7 +19,7 @@
 import React, { Component } from "react";
 import { Provider } from "react-redux";
 import { withRouter } from "react-router";
-import { Card } from "antd";
+import { Card, Alert } from "antd";
 import CodeSnippet from "@/components/code-snippet";
 import store from "@/store";
 import { home as trackEvents } from "@/tracks";
@@ -117,6 +117,10 @@ class BlockShow extends Component {
           <p>我只想被曝光一次</p>
         </Card>
         <CodeSnippet code={blockShowOnceSnippet} lang="js"></CodeSnippet>
+        <Alert
+          message="区域曝光类型的埋点需要元素绑定ref属性，属性必须以TrackRef结尾，即ref={ref => (this.cardTrackRef = ref)}"
+          type="warning"
+        />
       </div>
     );
   }
