@@ -2,7 +2,7 @@
  * Created Date: 2019-07-08
  * Author: 宋慧武
  * ------
- * Last Modified: Monday 2019-07-08 20:17:41 pm
+ * Last Modified: Friday 2019-08-23 16:23:28 pm
  * Modified By: the developer formerly known as 宋慧武 at <songhuiwu001@ke.com>
  * ------
  * HISTORY:
@@ -22,5 +22,6 @@ export default {
     }),
     resolve(),
     commonjs()
-  ]
+  ],
+  external: ["react-dom"]
 };
