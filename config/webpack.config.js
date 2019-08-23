@@ -481,11 +481,11 @@ module.exports = function(webpackEnv) {
           {},
           {
             inject: true,
-            filename: paths.appSrc + "/index.html",
             template: paths.appHtml
           },
           isEnvProduction
             ? {
+                filename: paths.appSrc + "/index.html",
                 minify: {
                   removeComments: true,
                   collapseWhitespace: true,
